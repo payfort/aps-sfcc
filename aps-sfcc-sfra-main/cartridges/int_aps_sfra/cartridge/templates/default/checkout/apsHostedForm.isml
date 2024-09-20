@@ -1,0 +1,20 @@
+<isdecorate template="common/layout/page">
+    <isscript>
+        var assets = require('*/cartridge/scripts/assets.js');
+        assets.addJs('js/hostedFormSubmit.js');
+    </isscript>
+    <div class="js-aps-hosted-page h-100 w-100 m-5">
+        <form method="post" action="${pdict.hostedFormURL}" id="aps-hosted-form" name="aps-hosted-form">
+            <input type="hidden" name="command" value="${pdict.hostedData.command}">
+            <input type="hidden" name="access_code" value="${pdict.hostedData.access_code}">
+            <input type="hidden" name="merchant_identifier" value="${pdict.hostedData.merchant_identifier}">
+            <input type="hidden" name="merchant_reference" value="${pdict.hostedData.merchant_reference}">
+            <input type="hidden" name="amount" value="${pdict.hostedData.amount}">
+            <input type="hidden" name="currency" value="${pdict.hostedData.currency}">
+            <input type="hidden" name="language" value="${pdict.hostedData.language}">
+            <input type="hidden" name="customer_email" value="${pdict.hostedData.customer_email}">
+            <input type="hidden" name="return_url" value="${pdict.hostedData.return_url}">
+            <input type="hidden" name="signature" value="${pdict.hostedData.signature}">
+        </form>
+    </div>
+</isdecorate>

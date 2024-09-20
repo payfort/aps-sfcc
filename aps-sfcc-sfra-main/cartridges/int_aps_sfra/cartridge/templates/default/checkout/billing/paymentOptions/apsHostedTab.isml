@@ -1,0 +1,7 @@
+<isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('apsEnabled') && dw.system.Site.getCurrent().getCustomPreferenceValue('apsHostedEnabled')}">
+    <li class="nav-item" data-method-id="${paymentOption.ID}" id="apsHostedPaymentTab">
+        <a class="nav-link aps-tab <isif condition=${selectedPayment === paymentOption.ID}><isprint value=${'active'} encoding=on /></isif>" data-toggle="tab" href="#aps-hosted-content" role="tab">
+            <isprint value="${paymentOption.name}" encoding="off" />
+        </a>
+    </li>
+</isif>

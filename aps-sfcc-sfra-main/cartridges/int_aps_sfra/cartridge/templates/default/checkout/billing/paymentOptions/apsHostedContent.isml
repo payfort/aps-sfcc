@@ -1,0 +1,14 @@
+<!--- aps hosted content --->
+<isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('apsEnabled') && dw.system.Site.getCurrent().getCustomPreferenceValue('apsHostedEnabled')}">
+    <div class="tab-pane aps-hosted-content <isif condition=${selectedPayment === paymentOption.ID}><isprint value=${'active'} encoding=on /></isif>" id="aps-hosted-content" role="tabpanel">
+        <fieldset class="payment-form-fields">
+
+            <iscomment> payment method is credit card </iscomment>
+            <input type="hidden" class="form-control" id="selectedPaymentOption"
+                name="${pdict.forms.billingForm.paymentMethod.htmlName}"
+                value="APS_HOSTED"
+            />
+            <isinclude template="checkout/billing/apsForm" />
+        </fieldset>
+    </div>
+</isif>

@@ -1,0 +1,36 @@
+name: Build and deploy to Managed runtime
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: |
+        npm install
+
+    - name: Set the credentials to upload code
+      run: |
+        npm run save-credentials -- --user ${{ secrets.MANAGED_RUNTIME_USER }} --key ${{ secrets.MANAGED_RUNTIME_KEY }}
+
+    - name: Build and deploy the PWA
+      run: |
+        MONTH_NAME=$(date +%B)
+        BUILD_NUMBER=$(echo "build-$(date +'%Y-')$MONTH_NAME-$(date +%d_%H:%M:%S)")
+        npm run push -- -m $BUILD_NUMBER -t development

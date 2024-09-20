@@ -1,0 +1,8 @@
+<isset name="redirectSettings" value="${require('*/cartridge/scripts/helpers/hostedHelper').getRedirectSettings()}" scope="page" />
+
+<div class="js-aps-config aps-form-content" id="aps-group"
+    data-data-url="${redirectSettings.getDataUrl}"
+    data-aps-enabled="${redirectSettings.apsEnabled}"
+    data-aps-hosted-enabled="${redirectSettings.apsHostedEnabled}">
+    <isprint value="${Resource.msg('msg.payment.redirect', 'aps', null)}" encoding="htmlcontent" />
+</div>

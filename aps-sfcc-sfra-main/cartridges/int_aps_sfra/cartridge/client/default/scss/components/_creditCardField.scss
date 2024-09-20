@@ -1,0 +1,11 @@
+@import "base/components/_creditCardField";
+
+.card-number-wrapper {
+    &[data-type="mada"]::after {
+        background-image: url('../../images/mada.svg');
+        transform: scale(2.5);
+        background-size: 48px 32px;
+        right: 20px;
+        top: 2px;
+    }
+}
