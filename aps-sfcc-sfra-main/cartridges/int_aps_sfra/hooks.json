@@ -1,0 +1,36 @@
+{
+    "hooks": [
+        {
+            "name": "app.payment.processor.aps_hosted",
+            "script": "./cartridge/scripts/hooks/payment/processor/APS_HOSTED"
+        },
+        {
+            "name": "app.payment.form.processor.aps_hosted",
+            "script": "./cartridge/scripts/hooks/payment/processor/APS_HOSTED_form_processor"
+        },
+        {
+            "name": "app.payment.processor.aps_card",
+            "script": "./cartridge/scripts/hooks/payment/processor/APS_CARD"
+        },
+        {
+            "name": "app.payment.form.processor.aps_card",
+            "script": "./cartridge/scripts/hooks/payment/processor/APS_CARD_form_processor"
+        },
+        {
+            "name": "dw.extensions.applepay.getRequest",
+            "script": "./cartridge/scripts/hooks/payment/processor/APS_APPLE_PAY"
+        },
+        {
+            "name": "dw.extensions.applepay.paymentAuthorized.authorizeOrderPayment",
+            "script": "./cartridge/scripts/hooks/payment/processor/APS_APPLE_PAY"
+        },
+        {
+            "name": "app.payment.processor.aps_apple_pay",
+            "script": "./cartridge/scripts/hooks/payment/processor/APS_APPLE_PAY"
+        },
+        {
+            "name": "app.payment.form.processor.aps_apple_pay",
+            "script": "./cartridge/scripts/hooks/payment/processor/APS_APPLE_PAY_form_processor"
+        }
+    ]
+}

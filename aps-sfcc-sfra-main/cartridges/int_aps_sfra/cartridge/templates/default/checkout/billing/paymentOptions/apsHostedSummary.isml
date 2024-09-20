@@ -1,0 +1,3 @@
+<div id="apsHostedSummary">
+    <span>${Resource.msg('msg.payment.type.aps', 'aps', null)}</span>
+</div>

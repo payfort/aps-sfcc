@@ -1,0 +1,32 @@
+{
+    "hooks": [
+        {
+            "name": "app.payment.processor.aps_card_pwa",
+            "script": "./cartridge/scripts/hooks/payment/processor/aps_card_pwa"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.payment_instrument.beforePOST",
+            "script": "./cartridge/scripts/hooks/basket/paymentInstrument.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.payment_instrument.afterPOST",
+            "script": "./cartridge/scripts/hooks/basket/paymentInstrument.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.payment_methods.modifyGETResponse_v2",
+            "script": "./cartridge/scripts/hooks/basket/paymentMethods.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.beforePOST",
+            "script": "./cartridge/scripts/hooks/order/orderHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.afterPOST",
+            "script": "./cartridge/scripts/hooks/order/orderHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.modifyPOSTResponse",
+            "script": "./cartridge/scripts/hooks/order/orderHooks.js"
+        }
+    ]
+}

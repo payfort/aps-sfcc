@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    <type-extension type-id="OrderPaymentInstrument">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="apsPaymentData">
+                <display-name xml:lang="x-default">APS Payment Data</display-name>
+                <type>text</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="cardNumber">
+                <display-name xml:lang="x-default">Card Number</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </custom-attribute-definitions>
+    </type-extension>
+
+    <type-extension type-id="SitePreferences">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="apsAccessCode">
+                <display-name xml:lang="x-default">APS Access Code</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsEnabled">
+                <display-name xml:lang="x-default">Enable Amazon Payment Services</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsHostedEnabled">
+                <display-name xml:lang="x-default">Enable APS Hosted Payment</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsMerchantIdentifier">
+                <display-name xml:lang="x-default">APS Merchant Identifier</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsMerchantURL">
+                <display-name xml:lang="x-default">APS Merchant URL</display-name>
+                <type>enum-of-string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <value-definitions>
+                    <value-definition default="true">
+                        <display xml:lang="x-default">Sandbox</display>
+                        <value>https://sbcheckout.payfort.com/FortAPI/paymentPage</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">Production</display>
+                        <value>https://checkout.payfort.com/FortAPI/paymentPage</value>
+                    </value-definition>
+                </value-definitions>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsPaymentMode">
+                <display-name xml:lang="x-default">APS Payment Mode</display-name>
+                <description xml:lang="x-default">Authorization - hold an amount from the Customer’s credit card account for a period of time. Purchase - means to authorize and capture the transaction amount automatically in one single request, accordingly the amount will be deducted from the customer’s card.</description>
+                <type>enum-of-string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <value-definitions>
+                    <value-definition default="true">
+                        <display xml:lang="x-default">PURCHASE</display>
+                        <value>PURCHASE</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">AUTHORIZATION</display>
+                        <value>AUTHORIZATION</value>
+                    </value-definition>
+                </value-definitions>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsSHARequestPhrase">
+                <display-name xml:lang="x-default">APS SHA Request Phrase</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsSHAResponsePhrase">
+                <display-name xml:lang="x-default">APS SHA Response Phrase</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsSHAType">
+                <display-name xml:lang="x-default">APS SHA Type</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <default-value>SHA-256</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsSuccessURLPWA">
+                <display-name xml:lang="x-default">APS Success URL for the PWA app</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsFailureURLPWA">
+                <display-name xml:lang="x-default">APS Failure URL for the PWA app</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsApplePayEnabled">
+                <display-name xml:lang="x-default">Enable APS Apple Pay</display-name>
+                <description xml:lang="x-default">Enable payments with Apple Pay.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsApplePayMerchantID">
+                <display-name xml:lang="x-default">APS Apple Pay merchant ID</display-name>
+                <description xml:lang="x-default">Enable payments with Apple Pay</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsApplePayAccessCode">
+                <display-name xml:lang="x-default">APS Apple Pay Access Code</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsApplePaySHARequestPhrase">
+                <display-name xml:lang="x-default">APS Apple Pay SHA Request Phrase</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsApplePaySHAResponsePhrase">
+                <display-name xml:lang="x-default">APS Apple Pay SHA Response Phrase</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsApplePaySHAType">
+                <display-name xml:lang="x-default">APS Apple Pay SHA Type</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <default-value>SHA-256</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="apsApplePayUrlValidationRegex">
+                <display-name xml:lang="x-default">APS Apple Pay URL Validation Regex</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <default-value>^(?:https?:\/\/)?(?:[^.]+\.)*apple\.com(?:\/.*)?$</default-value>
+            </attribute-definition>
+		</custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Amazon Payment Services">
+                <display-name xml:lang="x-default">Amazon Payment Services</display-name>
+                <attribute attribute-id="apsEnabled"/>
+                <attribute attribute-id="apsAccessCode"/>
+                <attribute attribute-id="apsMerchantIdentifier"/>
+                <attribute attribute-id="apsSHAType"/>
+                <attribute attribute-id="apsSHARequestPhrase"/>
+                <attribute attribute-id="apsSHAResponsePhrase"/>
+                <attribute attribute-id="apsMerchantURL"/>
+                <attribute attribute-id="apsHostedEnabled"/>
+                <attribute attribute-id="apsPaymentMode"/>
+                <attribute attribute-id="apsApplePayEnabled"/>
+                <attribute attribute-id="apsApplePayMerchantID"/>
+                <attribute attribute-id="apsSuccessURLPWA"/>
+                <attribute attribute-id="apsFailureURLPWA"/>
+                <attribute attribute-id="apsApplePayAccessCode"/>
+                <attribute attribute-id="apsApplePaySHAType"/>
+                <attribute attribute-id="apsApplePaySHARequestPhrase"/>
+                <attribute attribute-id="apsApplePaySHAResponsePhrase"/>
+                <attribute attribute-id="apsApplePayUrlValidationRegex"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+</metadata>

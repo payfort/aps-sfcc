@@ -1,0 +1,7 @@
+<isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('apsApplePayEnabled')}">
+    <li class="nav-item apple-pay-tab-wrapper" data-method-id="${paymentOption.ID}">
+        <a class="nav-link apple-pay-tab" data-toggle="tab" href="#apple-pay-content" role="tab">
+            <img class="apple-payoptions" src="${URLUtils.staticURL('/images/apple.png')}" height="32" alt="${paymentOption.name}" title="${paymentOption.name}"/>
+        </a>
+    </li>
+</isif>

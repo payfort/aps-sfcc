@@ -1,0 +1,7 @@
+.apple-pay-tab-wrapper {
+    display: none;
+}
+
+body.apple-pay-enabled .apple-pay-tab-wrapper {
+    display: block;
+}

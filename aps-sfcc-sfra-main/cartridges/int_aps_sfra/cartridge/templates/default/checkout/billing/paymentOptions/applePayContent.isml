@@ -1,0 +1,13 @@
+<isscript>
+    var assets = require('*/cartridge/scripts/assets.js');
+</isscript>
+
+<div class="tab-pane apple-pay-content" id="apple-pay-content" role="tabpanel">
+    <fieldset class="payment-form-fields">
+		<input type="hidden" class="form-control" name="${pdict.forms.billingForm.paymentMethod.htmlName}" value="DW_APPLE_PAY" />
+        <input type="hidden" class="js-aps-apple-pay-config"  name="aps-apple-pay" data-apple-pay-enabled="${dw.system.Site.getCurrent().getCustomPreferenceValue('apsApplePayEnabled')}"/>
+
+        <isapplepay class="apple-pay-cart btn btn-block"></isapplepay>
+        <div class="invalid-field-message"></div>
+    </fieldset>
+</div>
