@@ -22,11 +22,6 @@ function buildRequest(orderNumber, paymentInstrument, isPWARequest) { // eslint-
         requestData.card_security_code = session.privacy.cardSecurityCode;
     }
 
-    if (isPWARequest && !empty(paymentInstrument.custom.apsPaymentData)) {
-        var apsData = JSON.parse(paymentInstrument.custom.apsPaymentData);
-        requestData.card_security_code = apsData.cvv;
-    }
-
     requestData.return_url = isPWARequest ? URLUtils.https('ApsPWA-HandleReturn').toString() : URLUtils.https('APS-HandleReturn').toString();
     requestData.token_name = paymentInstrument.getCreditCardToken();
     requestData.signature = apsHelper.getSignature(requestData, false, false);

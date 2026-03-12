@@ -106,8 +106,8 @@ describe('accountHelpers', function () {
 
     it('should return no error on sucessfully authenticated customer', function () {
         getPrivacyCacheStub.returns('args');
-        var email = '';
-        var password = '';
+        var email = 'ok@salesforce.com';
+        var password = '122345';
         var rememberMe = false;
 
         var result = accoutHelpers.loginCustomer(email, password, rememberMe);
@@ -116,8 +116,8 @@ describe('accountHelpers', function () {
 
     it('should return an error on not-sucessfully authenticated customer and an error message', function () {
         getPrivacyCacheStub.returns('args');
-        var email = '';
-        var password = '';
+        var email = 'ok@salesforce.com';
+        var password = '122345';
         var rememberMe = false;
         mockedAuthStatus = 'AUTH_NOT_OK';
 

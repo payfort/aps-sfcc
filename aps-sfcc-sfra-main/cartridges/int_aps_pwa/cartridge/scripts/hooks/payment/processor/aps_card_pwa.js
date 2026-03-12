@@ -75,7 +75,7 @@ function HandlePWA(basket, paymentInformation, paymentMethodID) {
         paymentInstrument.setCreditCardExpirationYear(expirationYear);
 
         if (!empty(paymentInformation.storedPaymentUUID)) {
-            paymentInstrument.custom.apsPaymentData = JSON.stringify({ cvv: cardSecurityCode });
+            session.privacy.cardSecurityCode = cardSecurityCode;
         }
 
         paymentInstrument.setCreditCardToken(paymentInformation.creditCardToken);

@@ -6,6 +6,62 @@ var currentSite = require('dw/system/Site').getCurrent();
 var applePayService = require('*/cartridge/scripts/services/applePayService');
 
 /**
+ * Hardcoded whitelist of Apple Pay merchant validation domains.
+ * Source: https://developer.apple.com/documentation/apple_pay_on_the_web/setting_up_your_server
+ * Only these domains are permitted as targets for merchant validation requests.
+ */
+var APPLE_PAY_ALLOWED_DOMAINS = [
+    'apple-pay-gateway.apple.com',
+    'apple-pay-gateway-nc-pod1.apple.com',
+    'apple-pay-gateway-nc-pod2.apple.com',
+    'apple-pay-gateway-nc-pod3.apple.com',
+    'apple-pay-gateway-nc-pod4.apple.com',
+    'apple-pay-gateway-nc-pod5.apple.com',
+    'apple-pay-gateway-pr-pod1.apple.com',
+    'apple-pay-gateway-pr-pod2.apple.com',
+    'apple-pay-gateway-pr-pod3.apple.com',
+    'apple-pay-gateway-pr-pod4.apple.com',
+    'apple-pay-gateway-pr-pod5.apple.com',
+    'cn-apple-pay-gateway.apple.com',
+    'cn-apple-pay-gateway-sh-pod1.apple.com',
+    'cn-apple-pay-gateway-sh-pod2.apple.com',
+    'cn-apple-pay-gateway-sh-pod3.apple.com',
+    'cn-apple-pay-gateway-tj-pod1.apple.com',
+    'cn-apple-pay-gateway-tj-pod2.apple.com',
+    'cn-apple-pay-gateway-tj-pod3.apple.com'
+];
+
+/**
+ * Validates that a URL points to a known Apple Pay merchant validation domain.
+ * Enforces HTTPS and checks the hostname against a hardcoded whitelist to prevent SSRF.
+ *
+ * @param {string} url - The URL to validate
+ * @returns {boolean} true if the URL is a valid Apple Pay domain, false otherwise
+ */
+function isAllowedApplePayUrl(url) {
+    if (!url || typeof url !== 'string') {
+        return false;
+    }
+
+    // Enforce HTTPS scheme
+    if (url.indexOf('https://') !== 0) {
+        Logger.error('Apple Pay merchant validation URL rejected: non-HTTPS scheme - {0}', url);
+        return false;
+    }
+
+    // Extract hostname from URL (between "https://" and the next "/" or ":" or end of string)
+    var withoutScheme = url.substring(8); // length of 'https://'
+    var hostname = withoutScheme.split('/')[0].split(':')[0].split('?')[0].toLowerCase();
+
+    if (APPLE_PAY_ALLOWED_DOMAINS.indexOf(hostname) === -1) {
+        Logger.error('Apple Pay merchant validation URL rejected: domain not in whitelist - {0}', url);
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * Parses the Service response
  *
  * @param {Object} serviceResult the service result
@@ -54,9 +110,16 @@ function getBodyContent() {
 function validateMerchant(requestPayload) {
     var validateMerchantResponse = {};
     if (requestPayload.appleUrl) {
+        var url = requestPayload.appleUrl;
+
+        // SSRF protection: validate URL against hardcoded Apple Pay domain whitelist
+        if (!isAllowedApplePayUrl(url)) {
+            Logger.error('Apple Pay merchant validation blocked: URL failed domain whitelist check - {0}', url);
+            return validateMerchantResponse;
+        }
+
         requestPayload.initiativeContext = requestPayload.hostname;
         var validationRegex = currentSite.getCustomPreferenceValue('apsApplePayUrlValidationRegex');
-        var url = requestPayload.appleUrl;
         if (url.match(validationRegex)) {
             delete requestPayload.appleUrl;
             delete requestPayload.isTrusted;

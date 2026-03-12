@@ -12,7 +12,7 @@ var hooksHelper = require('*/cartridge/scripts/helpers/hooks');
 server.post('Submit', csrfProtection.generateToken, function(req, res, next) {
     var order = OrderMgr.getOrder(req.querystring.order_id);
 
-    if (!order && req.querystring.order_token !== order.getOrderToken()) {
+    if (!order || req.querystring.order_token !== order.getOrderToken()) {
         return next(new Error('Order token does not match'));
     }
 
