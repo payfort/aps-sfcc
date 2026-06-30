@@ -45,7 +45,15 @@ var getAPSPurchaseService = LocalServiceRegistry.createService('int.aps.purchase
      * @returns {string} - Log message, or null to create and use the default message
      */
     getRequestLogMessage: function (request) {
-        return request;
+        try {
+            var requestObj = JSON.parse(request);
+            if (requestObj.card_security_code) {
+                requestObj.card_security_code = '***';
+            }
+            return JSON.stringify(requestObj);
+        } catch (e) {
+            return request.replace(/"card_security_code"\s*:\s*"[^"]*"/, '"card_security_code":"***"');
+        }
     },
 
     /**
@@ -55,6 +63,9 @@ var getAPSPurchaseService = LocalServiceRegistry.createService('int.aps.purchase
      * @returns {string} - Message to be logged
      */
     filterLogMessage: function (msg) {
+        if (typeof msg === 'string' && msg.indexOf('card_security_code') !== -1) {
+            return msg.replace(/"card_security_code"\s*:\s*"[^"]*"/g, '"card_security_code":"***"');
+        }
         return msg;
     },
 
