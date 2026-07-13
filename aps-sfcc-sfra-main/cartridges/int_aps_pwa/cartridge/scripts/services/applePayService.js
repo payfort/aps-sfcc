@@ -2,6 +2,7 @@
 
 var LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
 var Logger = require('dw/system/Logger');
+var logRedactor = require('*/cartridge/scripts/util/logRedactor');
 
 function configureService(service, args) {
     var serviceMethod = args.method || 'GET';
@@ -45,7 +46,30 @@ module.exports = LocalServiceRegistry.createService('int.aps.applepay', {
 
         return returns;
     },
+
+    /**
+     * Redact the outbound Apple Pay request body before it is written to the
+     * service comm-log. The payload carries `apple_data`, `apple_signature`,
+     * and Apple Pay merchant validation identifiers that must not appear in
+     * log files readable from Business Manager or WebDAV.
+     */
+    getRequestLogMessage: function (request) {
+        return logRedactor.maskString(request);
+    },
+
+    /**
+     * Redact the raw Apple Pay response body before it is written to the
+     * service comm-log.
+     */
+    getResponseLogMessage: function (responseObj) {
+        return logRedactor.maskString(responseObj && responseObj.text);
+    },
+
+    /**
+     * Final redaction pass over any URL/request/response log entry emitted
+     * by the LocalServiceRegistry.
+     */
     filterLogMessage: function (msg) {
-        return msg;
+        return logRedactor.maskString(msg);
     }
 });
