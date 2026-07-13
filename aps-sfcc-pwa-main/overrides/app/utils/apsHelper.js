@@ -1,74 +1,53 @@
-import {SITE_PREFERENCES} from '../constants'
+/*
+ * APS request signing helper (PWA Kit client).
+ *
+ * IMPORTANT SECURITY NOTE
+ * -----------------------
+ * The APS SHA request phrase, access code, and merchant identifier are
+ * merchant-account credentials. They must never appear in code that ships to
+ * the browser: everything under `overrides/app/` is bundled by pwa-kit-dev
+ * into a public JavaScript chunk served from `/mobify/bundle/<deploy-id>/*.js`
+ * that any anonymous visitor can download and inspect.
+ *
+ * This module therefore does NOT compute the APS signature on the client and
+ * does NOT read any secret from the client bundle. Instead it delegates to the
+ * `int_aps_pwa` cartridge's `ApsPWA-GetTokenParams` controller, which reads the
+ * SHA request phrase from the Business Manager custom preference on the server
+ * and returns a fully signed tokenization parameter bag.
+ */
+import {getConfig} from '@salesforce/pwa-kit-runtime/utils/ssr-config'
 
-function generateUUID() {
-    let randomString = ''
-
-    for (let i = 0; i < 16; i++) {
-        const randomHex = Math.floor(Math.random() * 16).toString(16)
-        randomString += randomHex
-    }
-
-    return randomString
-}
-
-const getSignatureMainParams = (language) => {
-    return {
-        service_command: SITE_PREFERENCES.APS_TOKEN_SERVICE_COMMAND,
-        access_code: SITE_PREFERENCES.APS_ACCESS_CODE,
-        merchant_identifier: SITE_PREFERENCES.APS_MERCHANT_IDENTIFIER,
-        merchant_reference: `T-${generateUUID()}`,
-        language,
-        return_url: SITE_PREFERENCES.APS_RETURN_URL
-    }
-}
-
-const getSignature = async (signatureParams) => {
-    let signatureSequence = []
-
-    Object.keys(signatureParams).forEach(function (paramKey) {
-        let value = signatureParams[paramKey]
-        try {
-            if (typeof value === 'object' && value !== null) {
-                const keys = Object.keys(value)
-                if (keys.length > 0) {
-                    let nestedValue = []
-                    keys.forEach(function (key) {
-                        nestedValue.push(key + '=' + value[key])
-                    })
-                    nestedValue = '{' + nestedValue.join(', ') + '}'
-                    value = nestedValue
-                }
-            }
-        } catch (error) {
-            // do nothing
-        }
-        signatureSequence.push(paramKey + '=' + value)
-    })
-
-    signatureSequence.sort()
-    signatureSequence.push(SITE_PREFERENCES.APS_SHA_REQUEST_PHRASE)
-    signatureSequence.unshift(SITE_PREFERENCES.APS_SHA_REQUEST_PHRASE)
-    const finalPhrase = signatureSequence.join('')
-
-    const encoder = new TextEncoder()
-    const data = encoder.encode(finalPhrase)
+/**
+ * Request signed tokenization parameters from the SFCC server.
+ *
+ * The response contains only values that are already emitted to APS on the
+ * wire (identifiers plus the server-computed signature and the APS merchant
+ * URL). The SHA request phrase itself never leaves the SFCC server.
+ *
+ * @returns {Promise<Object>} signed token params, or an object with `error: true` on failure.
+ */
+export const getTokenMetaParams = async () => {
+    const {app} = getConfig()
+    const endpoint = `${app.sfccHost}${app.sfccSitePath}ApsPWA-GetTokenParams`
 
     try {
-        const hashBuffer = await window.crypto.subtle.digest(SITE_PREFERENCES.APS_SHA_TYPE, data)
-        const hashArray = Array.from(new Uint8Array(hashBuffer))
-        const hashedString = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-        return hashedString
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json'
+            }
+        })
+
+        if (!response.ok) {
+            console.error('Failed to obtain APS token params:', response.status)
+            return {error: true}
+        }
+
+        return await response.json()
     } catch (error) {
-        console.error('Error calculating signature:', error)
-        return ''
-    }
-}
-export const getTokenMetaParams = async (language) => {
-    const metaParams = getSignatureMainParams(language)
-    const signature = await getSignature(metaParams)
-    return {
-        ...metaParams,
-        signature
+        console.error('Failed to obtain APS token params:', error)
+        return {error: true}
     }
 }
 

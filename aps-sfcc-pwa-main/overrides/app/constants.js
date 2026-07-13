@@ -22,17 +22,22 @@ export const PAYMENT_METHODS_NAMES = {
     CARD: 'Card'
 }
 
+// SITE_PREFERENCES holds ONLY client-safe feature flags.
+//
+// Everything under `overrides/app/` is compiled into the public JavaScript
+// bundle served from `/mobify/bundle/<deploy-id>/*.js` and is readable by any
+// anonymous visitor via browser dev tools. Do NOT add any credential, secret,
+// SHA phrase, access code, merchant identifier, or per-merchant URL here.
+//
+// APS credentials (apsSHARequestPhrase, apsAccessCode, apsMerchantIdentifier,
+// apsMerchantURL, apsSHAType, apsReturnURL, apsTokenServiceCommand, etc.) MUST
+// be configured as Business Manager custom preferences on the SFCC instance;
+// the PWA obtains signed tokenization parameters from the
+// `ApsPWA-GetTokenParams` endpoint provided by the `int_aps_pwa` cartridge.
 export const SITE_PREFERENCES = {
     APS_ENABLED: true,
     APS_HOSTED_ENABLED: true,
-    APS_APPLE_PAY_ENABLED: true,
-    APS_MERCHANT_URL: 'https://sbcheckout.payfort.com/FortAPI/paymentPage',
-    APS_TOKEN_SERVICE_COMMAND: 'TOKENIZATION',
-    APS_SHA_TYPE: 'SHA-256',
-    APS_ACCESS_CODE: '',
-    APS_MERCHANT_IDENTIFIER: '',
-    APS_RETURN_URL: '',
-    APS_SHA_REQUEST_PHRASE: ''
+    APS_APPLE_PAY_ENABLED: true
 }
 
 // PAYMENT AND ERROR CONSTANTS

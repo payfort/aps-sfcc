@@ -143,7 +143,20 @@ const Payment = ({submitOrderApplePay}) => {
                 }
             } else {
                 const [expirationMonth, expirationYear] = instrument.expiry.split('/')
-                const tokenParams = await getTokenMetaParams('en')
+
+                // The signature and its input identifiers (service_command,
+                // access_code, merchant_identifier, merchant_reference,
+                // language, return_url) are produced server-side by
+                // `ApsPWA-GetTokenParams` so that the APS SHA request phrase
+                // never appears in the client bundle. `call_url` is also
+                // sourced from the server-side custom preference to avoid
+                // baking the APS gateway URL into the public bundle.
+                const tokenParams = await getTokenMetaParams()
+
+                if (!tokenParams || tokenParams.error || !tokenParams.signature) {
+                    showError()
+                    return {}
+                }
 
                 const requestBody = new URLSearchParams()
                 requestBody.append('service_command', tokenParams.service_command)
@@ -158,7 +171,7 @@ const Payment = ({submitOrderApplePay}) => {
                 requestBody.append('card_holder_name', instrument.holder)
                 requestBody.append('expiry_date', expirationYear + expirationMonth)
 
-                const tokenResponse = await fetch(SITE_PREFERENCES.APS_MERCHANT_URL, {
+                const tokenResponse = await fetch(tokenParams.call_url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -362,13 +375,6 @@ const Payment = ({submitOrderApplePay}) => {
                                         defaultMessage="Amazon Payment Services"
                                         id="checkout_payment.heading.aps"
                                     />
-                                    <form
-                                        noValidate
-                                        method="post"
-                                        action={SITE_PREFERENCES.APS_MERCHANT_URL}
-                                        id="aps-hosted-form"
-                                        style={{display: 'none'}}
-                                    ></form>
                                 </Heading>
                             </Stack>
                         )}

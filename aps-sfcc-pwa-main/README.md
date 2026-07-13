@@ -9,11 +9,26 @@ Welcome to the PWA Kit!
 -   Node 18 or later
 -   npm 9 or later
 
-### The following variables need to be set to overrides/app/constants.js
--   APS_ACCESS_CODE
--   APS_MERCHANT_IDENTIFIER
--   APS_RETURN_URL
--   APS_SHA_REQUEST_PHRASE
+### Configuring the Amazon Payment Services credentials
+
+The APS credentials (`apsSHARequestPhrase`, `apsAccessCode`, `apsMerchantIdentifier`,
+`apsMerchantURL`, `apsSHAType`, `apsReturnURL`, `apsTokenServiceCommand`, and the
+Apple Pay equivalents) MUST be configured as **Business Manager custom site
+preferences** on the SFCC instance, exactly as documented for the SFRA cartridge.
+They MUST NOT be placed in `overrides/app/constants.js` or any other file under
+`overrides/app/`.
+
+Everything under `overrides/app/` is compiled by `pwa-kit-dev` into the public
+JavaScript bundle served from `/mobify/bundle/<deploy-id>/*.js` and is readable
+by any anonymous visitor via browser dev tools. Placing the SHA request phrase
+(or any other secret) there would allow an external actor to compute valid APS
+signatures for arbitrary commands (REFUND, CAPTURE, VOID_AUTHORIZATION,
+CHECK_STATUS, UPDATE_TOKEN, etc.) against `paymentservices.payfort.com` on
+behalf of the merchant.
+
+At tokenization time, the PWA fetches a fully signed parameter bag from the
+`ApsPWA-GetTokenParams` endpoint provided by the `int_aps_pwa` cartridge; the
+SHA request phrase never leaves the SFCC server.
 
 ### Run the Project Locally
 

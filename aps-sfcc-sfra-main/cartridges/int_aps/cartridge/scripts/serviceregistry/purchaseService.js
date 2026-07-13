@@ -2,6 +2,7 @@
  *  APS purchase service
  */
 var LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
+var logRedactor = require('*/cartridge/scripts/util/logRedactor');
 
 var getAPSPurchaseService = LocalServiceRegistry.createService('int.aps.purchase', {
     /**
@@ -39,45 +40,45 @@ var getAPSPurchaseService = LocalServiceRegistry.createService('int.aps.purchase
 
     /**
      * Creates a communication log message for the given request.
-     * Used to hide sensitive data in server request logs
+     *
+     * The APS request bag carries the shopper's CVV (`card_security_code`),
+     * the APS vault token (`token_name`), the merchant credentials
+     * (`access_code`, `merchant_identifier`), the request signature, and PII
+     * (email, IP, card holder, PAN). None of those must reach the service
+     * comm-log, which is readable from Business Manager and WebDAV. The
+     * redactor scrubs the log-facing copy of the request while leaving the
+     * actual outbound payload delivered to APS unchanged.
      *
      * @param {Object} request - Request object
-     * @returns {string} - Log message, or null to create and use the default message
+     * @returns {string} - Log message
      */
     getRequestLogMessage: function (request) {
-        try {
-            var requestObj = JSON.parse(request);
-            if (requestObj.card_security_code) {
-                requestObj.card_security_code = '***';
-            }
-            return JSON.stringify(requestObj);
-        } catch (e) {
-            return request.replace(/"card_security_code"\s*:\s*"[^"]*"/, '"card_security_code":"***"');
-        }
+        return logRedactor.maskString(request);
     },
 
     /**
-     * Allows filtering communication URL, request, and response log messages
+     * Allows filtering communication URL, request, and response log messages.
      *
      * @param {string} msg - original log message
      * @returns {string} - Message to be logged
      */
     filterLogMessage: function (msg) {
-        if (typeof msg === 'string' && msg.indexOf('card_security_code') !== -1) {
-            return msg.replace(/"card_security_code"\s*:\s*"[^"]*"/g, '"card_security_code":"***"');
-        }
-        return msg;
+        return logRedactor.maskString(msg);
     },
 
     /**
-     * Creates a response log message for the given request
-     * Can accept {Object} response - service response object
+     * Creates a response log message for the given response.
+     *
+     * APS purchase responses echo `token_name`, `merchant_reference`, the
+     * response `signature`, `fort_id`, masked PAN, `card_holder_name`, and
+     * customer identifiers. They must be scrubbed before being written to the
+     * service comm-log.
      *
      * @param {Object} responseObj - service response object
-     * @returns {string} - Log message, or null to create and use the default message
+     * @returns {string} - Log message
      */
     getResponseLogMessage: function (responseObj) {
-        return responseObj.text;
+        return logRedactor.maskString(responseObj && responseObj.text);
     }
 });
 
